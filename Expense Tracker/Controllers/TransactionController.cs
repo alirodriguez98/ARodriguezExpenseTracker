@@ -24,30 +24,32 @@ namespace Expense_Tracker.Controllers
         public async Task<IActionResult> Index(DateTime fecha, string categoria)
         {
             //DateTime fechaFormateada = fecha..ParseExact(s, "dd/M/yyyy hh:mm:ss tt",
-                                   //CultureInfo.InvariantCulture);
+            //CultureInfo.InvariantCulture);
 
-            if (fecha == null)
+            var prueba = fecha.Date;
+
+            if (fecha.ToString("MM-dd-yy") == "01-01-01" && categoria == null)
             {
-                var applicationDbContext = _context.Transactions.Include(t => t.Category)
-                    .Where(t => t.Category.Title.Contains(categoria));
+                var applicationDbContext = _context.Transactions.Include(t => t.Category);
                 return View(await applicationDbContext.ToListAsync());
             }
             else if(categoria == null)
             {
                 var applicationDbContext = _context.Transactions.Include(t => t.Category)
-                    .Where(t => t.Category.Title.Contains(categoria));
+                    .Where(t => t.Date.Date == fecha.Date);
                 return View(await applicationDbContext.ToListAsync());
             }
-            else if(fecha == null && categoria == null)
+            else if(fecha.ToString("MM-dd-yy") == "01-01-01")
             {
-                var applicationDbContext = _context.Transactions.Include(t => t.Category);
+                var applicationDbContext = _context.Transactions.Include(t => t.Category)
+                    .Where(t => t.Category.Title.Contains(categoria));
                 return View(await applicationDbContext.ToListAsync());
             }
             else
             {
                 var applicationDbContext = _context.Transactions.Include(t => t.Category)
                     .Where(t => t.Category.Title.Contains(categoria))
-                    .Where(t => t.Date == fecha);
+                    .Where(t => t.Date.ToString("MM-dd-yy").Equals(fecha.ToString("MM-dd-yy")));
                 return View(await applicationDbContext.ToListAsync());
             }
             
