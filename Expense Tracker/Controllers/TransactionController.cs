@@ -49,7 +49,7 @@ namespace Expense_Tracker.Controllers
             {
                 var applicationDbContext = _context.Transactions.Include(t => t.Category)
                     .Where(t => t.Category.Title.Contains(categoria))
-                    .Where(t => t.Date.ToString("MM-dd-yy").Equals(fecha.ToString("MM-dd-yy")));
+                    .Where(t => t.Date.Date == fecha.Date);
                 return View(await applicationDbContext.ToListAsync());
             }
             
